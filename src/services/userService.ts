@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import { prisma } from '@/config/database'
-import { User, userSchema } from '@/models/User'
+import { CreateUser, User, createUserSchema, userSchema } from '@/models/User'
 
 class UserService {
-  async createUser(data: User): Promise<User> {
-    const validatedData = userSchema.parse(data) // Validação aqui
+  async createUser(data: CreateUser): Promise<User> {
+    const validatedData = createUserSchema.parse(data) // Validação aqui
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
     return await prisma.user.create({
@@ -52,13 +53,23 @@ class UserService {
     })
   }
 
-  async loginUser(email: string, password: string): Promise<User | null> {
+  async loginUser(
+    email: string,
+    password: string
+  ): Promise<{ user: User; token: string } | null> {
     const user = await prisma.user.findUnique({
       where: { email },
     })
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return user
+      // Gerar o token JWT
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '1h' } // Expiração do token, aqui configurado para 1 hora
+      )
+
+      return { user, token }
     }
 
     return null

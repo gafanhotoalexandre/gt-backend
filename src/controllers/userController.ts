@@ -47,9 +47,10 @@ export class UserController {
   async loginUser(req: Request, res: Response) {
     try {
       const { email, password } = req.body
-      const user = await userService.loginUser(email, password)
-      if (user) {
-        successResponse(res, user)
+      const result = await userService.loginUser(email, password)
+      if (result) {
+        // Retorna o token e o usuário
+        successResponse(res, { user: result.user, token: result.token })
       } else {
         res.status(401).json({ message: 'Invalid credentials' })
       }
