@@ -7,6 +7,15 @@ import { CreateUser, User, createUserSchema, userSchema } from '@/models/User'
 class UserService {
   async createUser(data: CreateUser): Promise<User> {
     const validatedData = createUserSchema.parse(data) // Validação aqui
+
+    // email já cadastrado
+    const emailExists = await prisma.user.findUnique({
+      where: { email: validatedData.email },
+    })
+    if (emailExists) {
+      throw new Error('E-mail já está em uso.')
+    }
+
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
     return await prisma.user.create({

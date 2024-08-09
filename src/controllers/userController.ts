@@ -7,8 +7,11 @@ export class UserController {
   async createUser(req: Request, res: Response) {
     try {
       const user = await userService.createUser(req.body)
-      successResponse(res, user)
-    } catch (error) {
+      res.status(201).json(user)
+    } catch (error: any) {
+      if (error.message.includes('já está em uso.')) {
+        return res.status(400).json({ message: error.message })
+      }
       errorResponse(res, error)
     }
   }
