@@ -25,7 +25,7 @@ export class ProductController {
 
   async create(req: Request, res: Response) {
     try {
-      const product = await productService.create(req.body)
+      const product = await productService.createProduct(req.body)
       return res.status(201).json(product)
     } catch (error) {
       return errorResponse(res, error)
@@ -34,7 +34,7 @@ export class ProductController {
 
   async update(req: Request, res: Response) {
     try {
-      await productService.update(Number(req.params.id), req.body)
+      await productService.updateProduct(Number(req.params.id), req.body)
       return res.status(204).send()
     } catch (error) {
       return errorResponse(res, error)
@@ -43,7 +43,7 @@ export class ProductController {
 
   async delete(req: Request, res: Response) {
     try {
-      await productService.delete(Number(req.params.id))
+      await productService.deleteProduct(Number(req.params.id))
       return res.status(204).send()
     } catch (error) {
       return errorResponse(res, error)

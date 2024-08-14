@@ -72,7 +72,7 @@ class ProductService {
     })
   }
 
-  async create(data: Product) {
+  async createProduct(data: Product) {
     // Valida os dados recebidos
     const validatedData = productSchema.parse(data)
 
@@ -111,7 +111,7 @@ class ProductService {
     return product
   }
 
-  async update(id: number, data: Product) {
+  async updateProduct(id: number, data: Product) {
     const validatedData = productSchema.parse(data)
 
     // Atualiza o produto
@@ -170,7 +170,7 @@ class ProductService {
     return product
   }
 
-  async delete(id: number) {
+  async deleteProduct(id: number) {
     return await prisma.product.delete({ where: { id } })
   }
 }
