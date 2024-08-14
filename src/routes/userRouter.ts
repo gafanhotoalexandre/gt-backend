@@ -20,4 +20,4 @@ router.get('/users-test', (req: Request, res: Response) =>
 
 // Outras rotas...
 
-export default router
+export { router as userRouter }
